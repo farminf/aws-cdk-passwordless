@@ -17,9 +17,10 @@
     "@aws-cdk/core": "^1.4.0"
   },
   "dependencies": {
-    "@aws-cdk/aws-sns": "^1.4.0",
-    "@aws-cdk/aws-sns-subscriptions": "^1.4.0",
-    "@aws-cdk/aws-sqs": "^1.4.0",
-    "@aws-cdk/core": "^1.4.0"
+    "@aws-cdk/core": "1.4.0",
+    "@aws-cdk/aws-cognito": "1.4.0",
+    "@aws-cdk/aws-iam": "1.4.0",
+    "@aws-cdk/aws-lambda": "1.4.0",
+    "@types/node": "^12.6.2"
   }
 }

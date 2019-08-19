@@ -1,32 +1,67 @@
-import sns = require('@aws-cdk/aws-sns');
-import subs = require('@aws-cdk/aws-sns-subscriptions');
-import sqs = require('@aws-cdk/aws-sqs');
-import cdk = require('@aws-cdk/core');
+import * as path from "path";
+import cdk = require("@aws-cdk/core");
+import cognito = require("@aws-cdk/aws-cognito");
+import iam = require("@aws-cdk/aws-iam");
+import lambda = require("@aws-cdk/aws-lambda");
 
 export interface CdkPasswordlessProps {
-  /**
-   * The visibility timeout to be configured on the SQS Queue, in seconds.
-   *
-   * @default Duration.seconds(300)
-   */
-  visibilityTimeout?: cdk.Duration;
+  userPoolClientName?: string;
 }
 
 export class CdkPasswordless extends cdk.Construct {
   /** @returns the ARN of the SQS queue */
-  public readonly queueArn: string;
+  public readonly userPool: cognito.UserPool;
+  public readonly userPoolClient: cognito.UserPoolClient;
 
-  constructor(scope: cdk.Construct, id: string, props: CdkPasswordlessProps = {}) {
+  constructor(
+    scope: cdk.Construct,
+    id: string,
+    props: CdkPasswordlessProps = {}
+  ) {
     super(scope, id);
 
-    const queue = new sqs.Queue(this, 'CdkPasswordlessQueue', {
-      visibilityTimeout: props.visibilityTimeout || cdk.Duration.seconds(300)
+    const { userPoolClientName } = props;
+
+    const lambdaRole = new iam.Role(this, "lambdaRole", {
+      assumedBy: new iam.CompositePrincipal(
+        new iam.ServicePrincipal("lambda.amazonaws.com"),
+        new iam.ServicePrincipal("cognito-idp.amazonaws.com")
+      ),
+      managedPolicies: [
+        iam.ManagedPolicy.fromAwsManagedPolicyName(
+          "service-role/AWSLambdaBasicExecutionRole"
+        )
+      ]
     });
 
-    const topic = new sns.Topic(this, 'CdkPasswordlessTopic');
+    const cognitoEventsLambda = new lambda.Function(
+      this,
+      "cognitoEventsLambda",
+      {
+        code: lambda.Code.asset(path.resolve(__dirname, "functions")),
+        description:
+          "This function auto-confirms users and their email addresses during sign-up",
+        handler: "cognitoEvents.handler",
+        runtime: lambda.Runtime.NODEJS_10_X,
+        role: lambdaRole
+      }
+    );
 
-    topic.addSubscription(new subs.SqsSubscription(queue));
+    const userPool = new cognito.UserPool(this, "userPool", {
+      lambdaTriggers: {
+        preSignUp: cognitoEventsLambda
+      },
+      autoVerifiedAttributes: [cognito.UserPoolAttribute.EMAIL],
+      signInType: cognito.SignInType.EMAIL
+    });
 
-    this.queueArn = queue.queueArn;
+    const userPoolClient = new cognito.UserPoolClient(this, "userPoolClient", {
+      userPoolClientName: userPoolClientName || "passwordless",
+      generateSecret: false,
+      userPool: userPool
+    });
+
+    this.userPool = userPool;
+    this.userPoolClient = userPoolClient;
   }
 }
