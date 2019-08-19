@@ -6,6 +6,8 @@ import lambda = require("@aws-cdk/aws-lambda");
 
 export interface CdkPasswordlessProps {
   userPoolClientName?: string;
+  verifiedDomains?: Array<string>;
+  mailSubject?: string;
 }
 
 export class CdkPasswordless extends cdk.Construct {
@@ -20,7 +22,7 @@ export class CdkPasswordless extends cdk.Construct {
   ) {
     super(scope, id);
 
-    const { userPoolClientName } = props;
+    const { userPoolClientName, verifiedDomains, mailSubject } = props;
 
     const lambdaRole = new iam.Role(this, "lambdaRole", {
       assumedBy: new iam.CompositePrincipal(
@@ -43,7 +45,11 @@ export class CdkPasswordless extends cdk.Construct {
           "This function auto-confirms users and their email addresses during sign-up",
         handler: "cognitoEvents.handler",
         runtime: lambda.Runtime.NODEJS_10_X,
-        role: lambdaRole
+        role: lambdaRole,
+        environment: {
+          VERIFIED_DOMAINS: JSON.stringify(verifiedDomains) || undefined,
+          SIGNINSUBJECT: mailSubject || undefined
+        }
       }
     );
 

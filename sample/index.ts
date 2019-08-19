@@ -4,7 +4,11 @@ import { CdkPasswordless } from "../lib/index";
 class myStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
     super(scope, id, props);
-    const pless = new CdkPasswordless(this, "myPasswordLess", {});
+    const pless = new CdkPasswordless(this, "myPasswordLess", {
+      mailSubject: "myStack - signIn",
+      userPoolClientName: "myClientName",
+      verifiedDomains: ["gmail.com"]
+    });
   }
 }
 
