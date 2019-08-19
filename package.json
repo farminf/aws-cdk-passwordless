@@ -1,0 +1,25 @@
+{
+  "name": "cdk-passwordless",
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "nodeunit test/test.*.js"
+  },
+  "devDependencies": {
+    "@types/nodeunit": "^0.0.30",
+    "nodeunit": "^0.11.2",
+    "typescript": "^3.3.3333"
+  },
+  "peerDependencies": {
+    "@aws-cdk/core": "^1.4.0"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-sns": "^1.4.0",
+    "@aws-cdk/aws-sns-subscriptions": "^1.4.0",
+    "@aws-cdk/aws-sqs": "^1.4.0",
+    "@aws-cdk/core": "^1.4.0"
+  }
+}
