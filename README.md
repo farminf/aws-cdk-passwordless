@@ -1,4 +1,4 @@
-# CDK PasswordLess Construct
+# AWS CDK PasswordLess Construct
 
 An AWS CDK construct for creating passwordless authentication resources on AWS.
 This Construct will create following resources with their configuration:
@@ -15,7 +15,6 @@ new CdkPasswordless(this, "myPasswordLess", {
   userPoolClientName: "myClientName",
   verifiedDomains: ["gmail.com"]
 });
-
 ```
 
 # note
