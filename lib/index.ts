@@ -55,7 +55,8 @@ export class CdkPasswordless extends cdk.Construct {
 
     const userPool = new cognito.UserPool(this, "userPool", {
       lambdaTriggers: {
-        preSignUp: cognitoEventsLambda
+        preSignUp: cognitoEventsLambda,
+        customMessage: cognitoEventsLambda
       },
       autoVerifiedAttributes: [cognito.UserPoolAttribute.EMAIL],
       signInType: cognito.SignInType.EMAIL
