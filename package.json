@@ -27,7 +27,7 @@
     "@aws-cdk/core": "1.4.0",
     "@types/jest": "^24.0.17",
     "@types/node": "^12.6.2",
-    "jest": "^24.9.0"
+    "jest": "24.8.0"
   },
   "jest": {
     "moduleFileExtensions": [
