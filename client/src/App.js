@@ -1,4 +1,4 @@
-import React , { useState } from 'react';
+import React , { useState , useEffect } from 'react';
 import Amplify,{ Auth } from 'aws-amplify';
 import generator from "generate-password";
 import awsExport from './aws-exports';
@@ -8,6 +8,20 @@ function App() {
 
   const [email,setEmail] = useState("");
   const [code,setCode] = useState("");
+  const [session,setSession] = useState("Not loggedIn");
+
+  
+
+  useEffect(()=>{
+    async function fetchAuth() {
+      const auth = await Auth.currentSession();
+      if (auth) {
+        setSession(auth.getAccessToken().getJwtToken());
+      }
+    }
+    fetchAuth();
+    
+  },[]);
 
   const awsConfirmCode = async () => {
     const password = generator.generate({
@@ -19,7 +33,7 @@ function App() {
     try {
       await Auth.forgotPasswordSubmit(email, code, password);
       await Auth.signIn(email, password);
-      
+
     } catch (e) {
       console.error("Error in confirmForgotPassword: ", e);
       return false;
@@ -97,6 +111,7 @@ function App() {
         />
         <button type="submit"> Confirm Code</button>
       </form>
+      <p>{session}</p>
     </div>
   );
 }
