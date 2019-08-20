@@ -5,14 +5,33 @@ import iam = require("@aws-cdk/aws-iam");
 import lambda = require("@aws-cdk/aws-lambda");
 
 export interface CdkPasswordlessProps {
+  /**
+   * Name of the user pool client
+   *
+   * @default - automatically generated name by CloudFormation at deploy time
+   */
   userPoolClientName?: string;
+  /**
+   * list of domains which are allowed to sign up account with, if don't specified, all domains will be allowed
+   *
+   * @default - []
+   */
   verifiedDomains?: Array<string>;
+  /**
+   * Subject of the code confirmation mail
+   *
+   * @default - "Passwordless App – Sign In"
+   */
   mailSubject?: string;
 }
 
+/**
+ * A construct for creating resources for doing passwordless authentication
+ */
 export class CdkPasswordless extends cdk.Construct {
-  /** @returns the ARN of the SQS queue */
+  /** @returns the UserPool Resource */
   public readonly userPool: cognito.UserPool;
+  /** @returns the UserPool Client Resource */
   public readonly userPoolClient: cognito.UserPoolClient;
 
   constructor(
