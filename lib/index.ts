@@ -23,6 +23,12 @@ export interface CdkPasswordlessProps {
    * @default - "Passwordless App – Sign In"
    */
   mailSubject?: string;
+  /**
+   * Lambda Function which will be passed as postConfirmation trigger for cognito pool
+   *
+   * @default - null
+   */
+  postConfirmationLambda?: lambda.Function;
 }
 
 /**
@@ -41,7 +47,12 @@ export class CdkPasswordless extends cdk.Construct {
   ) {
     super(scope, id);
 
-    const { userPoolClientName, verifiedDomains, mailSubject } = props;
+    const {
+      userPoolClientName,
+      verifiedDomains,
+      mailSubject,
+      postConfirmationLambda
+    } = props;
 
     const lambdaRole = new iam.Role(this, "lambdaRole", {
       assumedBy: new iam.CompositePrincipal(
@@ -75,7 +86,10 @@ export class CdkPasswordless extends cdk.Construct {
     const userPool = new cognito.UserPool(this, "userPool", {
       lambdaTriggers: {
         preSignUp: cognitoEventsLambda,
-        customMessage: cognitoEventsLambda
+        customMessage: cognitoEventsLambda,
+        ...(postConfirmationLambda && {
+          postConfirmation: postConfirmationLambda
+        })
       },
       autoVerifiedAttributes: [cognito.UserPoolAttribute.EMAIL],
       signInType: cognito.SignInType.EMAIL
