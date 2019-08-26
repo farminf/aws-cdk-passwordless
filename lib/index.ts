@@ -103,18 +103,5 @@ export class CdkPasswordless extends cdk.Construct {
 
     this.userPool = userPool;
     this.userPoolClient = userPoolClient;
-
-    new cdk.CfnOutput(this, "userPoolIdOutput", {
-      exportName: "passwordLessUserPoolId",
-      value: this.userPool.userPoolId
-    });
-    new cdk.CfnOutput(this, "userPoolArnOutput", {
-      exportName: "passwordLessUserPoolArn",
-      value: this.userPool.userPoolArn
-    });
-    new cdk.CfnOutput(this, "userPoolClientIdOutput", {
-      exportName: "passwordLessUserPoolClientId",
-      value: this.userPoolClient.userPoolClientId
-    });
   }
 }
