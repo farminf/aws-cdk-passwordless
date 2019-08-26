@@ -119,7 +119,7 @@
     "@aws-cdk/aws-kms" "^1.4.0"
     "@aws-cdk/core" "^1.4.0"
 
-"@aws-cdk/aws-ssm@^1.4.0":
+"@aws-cdk/aws-ssm@1.4.0", "@aws-cdk/aws-ssm@^1.4.0":
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-ssm/-/aws-ssm-1.4.0.tgz#9372412d44fe2646b54b47c95ee0e5044be3a127"
   integrity sha512-bS9ZxHrCjGysCdqTyUSlrxD/XC9cIb873nd19vTdGH9+wu9RA6RKF5XP79UJqP9alf7fVwJqRBySrnSSI7StnA==
