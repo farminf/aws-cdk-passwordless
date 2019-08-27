@@ -9,12 +9,19 @@ This Construct will create following resources with their configuration:
 
 # Usage
 
+```bash
+yarn add aws-cdk-passwordless
+```
+
 ```js
+import { CdkPasswordless } from "aws-cdk-passwordless";
+
+
 new CdkPasswordless(this, "myPasswordLess", {
-  mailSubject: "myStack - signIn",
+  mailSubject: "myStack - signIn", // subject of the mail arriving with code to confirm
   userPoolClientName: "myClientName",
-  verifiedDomains: ["gmail.com"],
-  postConfirmationLambda: lambda.Function(...)
+  verifiedDomains: ["gmail.com"], // emails with the domains that are allow to signup
+  postConfirmationLambda: lambda.Function(...) // passing a lambda which will be triggered after code confirmation
 });
 ```
 
