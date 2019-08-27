@@ -13,7 +13,8 @@ This Construct will create following resources with their configuration:
 new CdkPasswordless(this, "myPasswordLess", {
   mailSubject: "myStack - signIn",
   userPoolClientName: "myClientName",
-  verifiedDomains: ["gmail.com"]
+  verifiedDomains: ["gmail.com"],
+  postConfirmationLambda: lambda.Function(...)
 });
 ```
 
